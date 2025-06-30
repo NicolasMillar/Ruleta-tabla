@@ -73,6 +73,19 @@ export class RuletaComponent implements AfterViewInit {
       rouletteContainer.appendChild(elementContainer);
       pAccumulated += value.probability;
     });
+    this.values.forEach((_, index) => {
+      const separator = document.createElement('div');
+      separator.classList.add('absolute', 'bg-black');
+      separator.style.width = '2px';
+      separator.style.height = '50%';
+      separator.style.top = '0';
+      separator.style.left = '50%';
+      separator.style.transformOrigin = 'bottom';
+      separator.style.transform = `rotate(${this.calculateGrade(pAccumulated)}deg)`;
+
+      rouletteContainer.appendChild(separator);
+      pAccumulated += this.values[index].probability;
+    });
   }
 
 
