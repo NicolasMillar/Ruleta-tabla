@@ -25,6 +25,24 @@ export class RuletaComponent implements AfterViewInit {
     this.generateLimit(rouletteContainer);
   }
 
+  spin() {
+    const result = Math.random() * 100;
+    let drawn = '';
+    let pAccumulated = 0;
+
+    values.forEach((value) => {
+      if (result >= pAccumulated && result < value.probability + pAccumulated) {
+        console.log(`Encontrado valor: ${value.name}`);
+        drawn = value.name;
+      }
+      pAccumulated += value.probability;
+    });
+
+    if (!drawn) {
+      console.log('No se ha ganado nada');
+    }
+  }
+
 
   getPosition(probability: number): string {
     const probabilityInRadians = (probability / 100) * 2 * Math.PI;
