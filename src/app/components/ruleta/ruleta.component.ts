@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, HostBinding } from '@angular/core';
 import { colors, values } from './assets/var.container';
 
 @Component({
@@ -10,6 +10,8 @@ import { colors, values } from './assets/var.container';
 })
 
 export class RuletaComponent implements AfterViewInit {
+
+  @HostBinding('style.--giro-ruleta') giro = '0deg';
 
   ngAfterViewInit(): void {
     this.adjustRoulette();
@@ -27,21 +29,54 @@ export class RuletaComponent implements AfterViewInit {
 
   spin() {
     const result = Math.random() * 100;
-    let drawn = '';
+    let drawn: { name: string; probability: number } | undefined;
     let pAccumulated = 0;
+    const roulette = document.getElementById('roulette');
+    if (!roulette) return;
+    roulette.classList.toggle('spin', true);
 
     values.forEach((value) => {
       if (result >= pAccumulated && result < value.probability + pAccumulated) {
         console.log(`Encontrado valor: ${value.name}`);
-        drawn = value.name;
+        drawn = {
+          name: value.name,
+          probability: value.probability + pAccumulated
+        };
       }
       pAccumulated += value.probability;
     });
 
     if (!drawn) {
       console.log('No se ha ganado nada');
+      return;
     }
+
+    console.log(drawn);
+    const endRotation = ((drawn.probability * 360 / 100) - 1) + 360 * 10;
+
+    this.spinAnimation(endRotation);
   }
+
+  spinAnimation(endRotation: number) {
+    const roulette = document.getElementById('roulette');
+    if (!roulette) return;
+
+    const startRotation = parseFloat(this.giro) || 0;
+
+    roulette.animate([
+      { transform: `rotate(${startRotation}deg)` },
+      { transform: `rotate(${endRotation}deg)` }
+    ], {
+      duration: 5000,
+      easing: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
+      fill: 'forwards'
+    });
+
+    this.giro = `${endRotation}deg`;
+  }
+
+
+
 
 
   getPosition(probability: number): string {
