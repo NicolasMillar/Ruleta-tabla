@@ -32,36 +32,30 @@ export class RuletaComponent implements AfterViewInit {
     const result = Math.random() * 100;
     let drawn: { name: string; probability: number } | undefined;
     let pAccumulated = 0;
-    const roulette = document.getElementById('roulette');
-    if (!roulette) return;
-    roulette.classList.toggle('spin', true);
 
-    values.forEach((value) => {
-      if (result >= pAccumulated && result < value.probability + pAccumulated) {
-        console.log(`Encontrado valor: ${value.name}`);
-        drawn = {
-          name: value.name,
-          probability: value.probability + pAccumulated
-        };
+    for (const value of values) {
+      if (result >= pAccumulated && result < pAccumulated + value.probability) {
+        drawn = value;
+        break;
       }
       pAccumulated += value.probability;
-    });
+    }
 
     if (!drawn) {
       console.log('No se ha ganado nada');
       return;
     }
 
-    console.log(drawn);
-    const endRotation = ((drawn.probability * 360 / 100) - 1) + 360 * 10;
+    const sectorMid = pAccumulated + (drawn.probability / 2);
+
+    const endRotation = this.calculateGrade(100 - sectorMid) + (10 * 360);
 
     this.spinAnimation(endRotation);
-
     this.winnerName = drawn.name;
 
     setTimeout(() => {
       const modal = document.getElementById('winModal') as HTMLDialogElement | null;
-      if (modal) modal.showModal();
+      modal?.showModal();
     }, 5000);
   }
 
@@ -69,23 +63,23 @@ export class RuletaComponent implements AfterViewInit {
     const roulette = document.getElementById('roulette');
     if (!roulette) return;
 
-    const startRotation = parseFloat(this.giro) || 0;
+    const currentRotation = parseFloat(this.giro) % 360;
 
-    roulette.animate([
-      { transform: `rotate(${startRotation}deg)` },
-      { transform: `rotate(${endRotation}deg)` }
-    ], {
-      duration: 5000,
-      easing: 'cubic-bezier(0.165, 0.84, 0.44, 1)',
-      fill: 'forwards'
-    });
+    const rotationDiff = (endRotation - currentRotation + 360) % 360;
+    const totalRotation = currentRotation + 360 * 10 + rotationDiff;
 
-    this.giro = `${endRotation}deg`;
+    this.giro = `${totalRotation}deg`;
+
+    roulette.style.transition = 'transform 5s cubic-bezier(0.165, 0.84, 0.44, 1)';
+    roulette.style.transform = `rotate(${endRotation}deg)`;
+
+    setTimeout(() => {
+      roulette.style.transition = 'none';
+      const finalRotation = totalRotation % 360;
+      this.giro = `${finalRotation}deg`;
+      roulette.style.transform = `rotate(${finalRotation}deg)`;
+    }, 5000);
   }
-
-
-
-
 
   getPosition(probability: number): string {
     const probabilityInRadians = (probability / 100) * 2 * Math.PI;
@@ -101,14 +95,12 @@ export class RuletaComponent implements AfterViewInit {
     let pAccumulated = 0;
 
     values.forEach((value, index) => {
-      // sector visual
       const elementContainer = document.createElement('div');
       elementContainer.classList.add('w-100', 'h-100', 'absolute');
       elementContainer.style.transform = `rotate(${this.calculateGrade(pAccumulated)}deg)`;
       elementContainer.style.clipPath = this.getPosition(value.probability);
       elementContainer.classList.add(colors[index % colors.length]);
 
-      // etiqueta
       const midAngle = pAccumulated + value.probability / 2;
       const angleDeg = this.calculateGrade(midAngle);
 

@@ -16,10 +16,7 @@
 }
 
 .spin {
-    animation-name: spin;
-    animation-duration: 5s;
-    animation-fill-mode: forwards;
-    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+    animation: spin 5s ease-out forwards;
 }
 
 @keyframes spin {
