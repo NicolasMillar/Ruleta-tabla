@@ -12,6 +12,7 @@ import { colors, values } from './assets/var.container';
 export class RuletaComponent implements AfterViewInit {
 
   @HostBinding('style.--giro-ruleta') giro = '0deg';
+  winnerName = '';
 
   ngAfterViewInit(): void {
     this.adjustRoulette();
@@ -55,6 +56,13 @@ export class RuletaComponent implements AfterViewInit {
     const endRotation = ((drawn.probability * 360 / 100) - 1) + 360 * 10;
 
     this.spinAnimation(endRotation);
+
+    this.winnerName = drawn.name;
+
+    setTimeout(() => {
+      const modal = document.getElementById('winModal') as HTMLDialogElement | null;
+      if (modal) modal.showModal();
+    }, 5000);
   }
 
   spinAnimation(endRotation: number) {
@@ -91,18 +99,44 @@ export class RuletaComponent implements AfterViewInit {
 
   generateRoulette(rouletteContainer: HTMLDivElement) {
     let pAccumulated = 0;
-    values.forEach((value, index) => {
-      const elementContainer = document.createElement('div');
-      const colorClass = colors[index % colors.length];
 
+    values.forEach((value, index) => {
+      // sector visual
+      const elementContainer = document.createElement('div');
       elementContainer.classList.add('w-100', 'h-100', 'absolute');
-      elementContainer.style.transform = `rotate(${this.calculateGrade(pAccumulated)}deg)`
+      elementContainer.style.transform = `rotate(${this.calculateGrade(pAccumulated)}deg)`;
       elementContainer.style.clipPath = this.getPosition(value.probability);
-      elementContainer.classList.add(colorClass);
+      elementContainer.classList.add(colors[index % colors.length]);
+
+      // etiqueta
+      const midAngle = pAccumulated + value.probability / 2;
+      const angleDeg = this.calculateGrade(midAngle);
+
+      const label = document.createElement('div');
+      label.style.position = 'absolute';
+      label.style.left = '50%';
+      label.style.top = '0';
+      label.style.height = '50%';
+      label.style.display = 'flex';
+      label.style.justifyContent = 'center';
+      label.style.alignItems = 'center';
+      label.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
+
+      const text = document.createElement('span');
+      text.textContent = value.name;
+      text.style.transform = `rotate(${-angleDeg}deg)`;
+      text.style.fontSize = '0.75rem';
+      text.style.color = '#000';
+      text.style.pointerEvents = 'none';
+
+      label.appendChild(text);
+      elementContainer.appendChild(label);
       rouletteContainer.appendChild(elementContainer);
+
       pAccumulated += value.probability;
     });
   }
+
 
   generateLimit(rouletteContainer: HTMLDivElement) {
     let pAccumulated = 0;

@@ -1,7 +1,30 @@
 <div class="w-full h-96 flex items-center justify-center">
-    <div id="roulette" class="w-100 h-100 border border-gray-400 rounded-full">
+    <div class="indicator">
+        <div id="roulette" class="w-100 h-100 border border-gray-400 rounded-full"></div>
+
+        <span class="indicator-item indicator-top indicator-center text-2xl text-black">
+            ▼
+        </span>
     </div>
+
     <div id="button" class="bg-accent">
         <button class="btn btn-accent" (click)="spin()">Girar</button>
     </div>
 </div>
+
+<dialog id="winModal" class="modal modal-bottom sm:modal-middle">
+    <form method="dialog" class="modal-box">
+        <h3 class="text-lg font-bold">Ganador</h3>
+
+        <p class="text-center text-5xl font-extrabold
+              bg-gradient-to-r
+              from-red-500 via-yellow-400 via-green-500 via-blue-500 to-purple-500
+              inline-block text-transparent bg-clip-text mx-auto my-4">
+            {{ winnerName }}
+        </p>
+
+        <div class="modal-action">
+            <button class="btn">Cerrar</button>
+        </div>
+    </form>
+</dialog>
