@@ -101,25 +101,26 @@ export class RuletaComponent implements AfterViewInit {
       elementContainer.style.clipPath = this.getPosition(value.probability);
       elementContainer.classList.add(colors[index % colors.length]);
 
-      const midAngle = pAccumulated + value.probability / 2;
-      const angleDeg = this.calculateGrade(midAngle);
+      const midAngle = pAccumulated + (value.probability / 2);
+      const angleDeg = this.calculateGrade(100 - midAngle);
+      const labelRadius = 20;
 
       const label = document.createElement('div');
       label.style.position = 'absolute';
+      label.style.width = '20%';
       label.style.left = '50%';
-      label.style.top = '0';
-      label.style.height = '50%';
-      label.style.display = 'flex';
-      label.style.justifyContent = 'center';
-      label.style.alignItems = 'center';
-      label.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
+      label.style.top = '15%';
+      label.style.transform = `rotate(${angleDeg}deg) translateY(-50%) translateX(${labelRadius}%) rotate(${-angleDeg}deg)`;
+      label.style.transformOrigin = '0 50%';
+      label.style.textAlign = 'center';
+      label.style.pointerEvents = 'none';
 
       const text = document.createElement('span');
       text.textContent = value.name;
-      text.style.transform = `rotate(${-angleDeg}deg)`;
-      text.style.fontSize = '0.75rem';
+      text.style.display = 'inline-block';
+      text.style.fontSize = '0.9rem';
       text.style.color = '#000';
-      text.style.pointerEvents = 'none';
+      text.style.whiteSpace = 'nowrap';
 
       label.appendChild(text);
       elementContainer.appendChild(label);
