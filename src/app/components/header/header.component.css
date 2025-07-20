@@ -1,0 +1,26 @@
+.header {
+    padding-bottom: 7vh;
+    width: 100%;
+}
+
+.marquee-text {
+    overflow: clip;
+}
+
+.marquee-content {
+    display: flex;
+    padding-left: 7rem;
+    gap: 7rem;
+    width: max-content;
+    animation: marquee-move-text var(--speed, 10s) linear infinite;
+}
+
+.marquee-content span {
+    font-size: large;
+}
+
+@keyframes marquee-move-text {
+    to {
+        transform: translateX(-50%);
+    }
+}
