@@ -1,3 +1,4 @@
 <div class="w-full flex items-center justify-center">
-    <app-ruleta></app-ruleta>
+    <app-ruleta *ngIf="activeTab === 'ruleta'"></app-ruleta>
+    <app-table *ngIf="activeTab === 'tabla'"></app-table>
 </div>

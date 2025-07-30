@@ -1,11 +1,11 @@
 <div class="tabs tabs-boxed flex justify-center mb-4">
-    <a class="tab flex-auto text-center">
+    <a class="tab flex-auto text-center" (click)="tabChange.emit('ruleta')">
         <svg class="inline-block w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 1a9 9 0 100 18A9 9 0 0010 1zm0 16a7 7 0 110-14 7 7 0 010 14z" />
         </svg>
         Ruleta
     </a>
-    <a class="tab flex-auto text-center">
+    <a class="tab flex-auto text-center" (click)="tabChange.emit('tabla')">
         <svg class="inline-block w-5 h-5 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
             width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
             <path fill-rule="evenodd"
@@ -15,12 +15,3 @@
         Tabla
     </a>
 </div>
-
-<!-- <div class="p-4">
-    <ng-container *ngIf="activeTab === 'ruleta'">
-        <app-ruleta></app-ruleta>
-    </ng-container>
-    <ng-container *ngIf="activeTab === 'tabla'">
-        <app-tabla></app-tabla>
-    </ng-container>
-</div> -->

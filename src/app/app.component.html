@@ -3,7 +3,7 @@
         <app-header></app-header>
     </div>
     <div class="flex flex-col h-screen">
-        <app-body class="basis-[95%] flex items-center justify-center"></app-body>
-        <app-footer class="flex-none"></app-footer>
+        <app-body [activeTab]="activeTab" class="basis-[95%] flex items-center justify-center"></app-body>
+        <app-footer class="flex-none" (tabChange)="activeTab = $event"></app-footer>
     </div>
 </div>
