@@ -9,7 +9,7 @@ const two = {
 };
 
 const three = {
-    name: 'Millar',
+    name: 'Millar Ged',
     probability: 17
 };
 
